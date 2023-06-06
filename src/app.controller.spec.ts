@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+/**
+ * ルートモジュールのテスト
+ */
 describe('AppController', () => {
   let appController: AppController;
 
@@ -12,5 +15,11 @@ describe('AppController', () => {
     }).compile();
 
     appController = app.get<AppController>(AppController);
+  });
+
+  describe('root', () => {
+    it('"Hello World!" が取得できる', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
   });
 });
