@@ -6,11 +6,8 @@ import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolIn
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('idols')
-  async getIdols(
-    @Query('name') name: string,
-    @Query('age') age: number,
-  ): Promise<IGetIdolInfoArray> {
-    return this.appService.getIdols(name, age);
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
   }
 }

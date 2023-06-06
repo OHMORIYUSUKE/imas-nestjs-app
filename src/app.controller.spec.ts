@@ -13,4 +13,10 @@ describe('AppController', () => {
 
     appController = app.get<AppController>(AppController);
   });
+
+  describe('root', () => {
+    it('"Hello World!" が取得できる', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
+  });
 });
