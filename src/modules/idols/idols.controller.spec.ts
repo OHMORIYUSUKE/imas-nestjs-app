@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IdolsController } from './idols.controller';
 import { IdolsService } from './idols.service';
 
-describe('AppController', () => {
+/**
+ * idolsモジュールのテスト
+ */
+describe('IdolsController', () => {
   let appController: IdolsController;
 
   beforeEach(async () => {
@@ -14,7 +17,7 @@ describe('AppController', () => {
     appController = app.get<IdolsController>(IdolsController);
   });
 
-  describe('root', () => {
+  describe('idols', () => {
     it('春香 で検索したときに 天海 春香 のみが取得できる', async () => {
       const actualResultPromise = appController.getIdols('春香', null);
 

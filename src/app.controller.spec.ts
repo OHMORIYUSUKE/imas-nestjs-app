@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+/**
+ * ルートモジュールのテスト
+ */
 describe('AppController', () => {
   let appController: AppController;
 

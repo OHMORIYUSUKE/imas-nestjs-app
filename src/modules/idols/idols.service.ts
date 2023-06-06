@@ -4,6 +4,14 @@ import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolIn
 
 @Injectable()
 export class IdolsService {
+  /**
+   * アイドルの情報を取得し、アイドルを検索する
+   * 名前はカタカナ、漢字(部分一致)で検索可能
+   *
+   * @param name アイドルの名前(部分一致)
+   * @param age アイドルの年齢
+   * @returns Promise<IGetIdolInfoArray>
+   */
   async getIdols(name: string, age: number): Promise<IGetIdolInfoArray> {
     const princessApiSdk = new PrincessApiSdk();
     const response = await princessApiSdk.getIdolInfo();

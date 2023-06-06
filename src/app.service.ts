@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PrincessApiSdk } from 'princess-api-sdk';
-import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 
+/**
+ * ルートサービス
+ */
 @Injectable()
 export class AppService {
+  /**
+   * 'Hello World!'を返す
+   * @returns 'Hello World!'
+   */
   getHello(): string {
     return 'Hello World!';
   }

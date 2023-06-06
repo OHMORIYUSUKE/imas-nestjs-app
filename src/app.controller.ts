@@ -1,11 +1,17 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 
+/**
+ * ルートコントローラ
+ */
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  /**
+   * 文字列(Hello World!)を返す
+   * @returns string
+   */
   @Get()
   getHello(): string {
     return this.appService.getHello();
