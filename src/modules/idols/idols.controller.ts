@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { IdolsService } from './idols.service';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 /**
  * idolsコントローラ
@@ -18,6 +19,7 @@ export class IdolsController {
    * @param age アイドルの年齢
    * @returns Promise<IGetIdolInfoArray>
    */
+  @UseGuards(JwtAuthGuard)
   @Get('idols')
   async getIdols(
     @Query('name') name: string,
