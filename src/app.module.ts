@@ -3,13 +3,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CorsMiddleware } from './middleware/cors.middleware';
 import { IdolsModule } from './modules/idols/idols.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersService } from './modules/users/users.service';
+import { UsersModule } from './modules/users/users.module';
+import { AuthService } from './modules/auth/auth.service';
 
 /**
  * ルートモジュール
  */
 @Module({
   // モジュールを読むこむ
-  imports: [IdolsModule],
+  imports: [IdolsModule, AuthModule],
   // コントローラを登録する
   controllers: [AppController],
   // プロバイダ(サービス)を登録する

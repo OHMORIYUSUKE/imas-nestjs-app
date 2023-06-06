@@ -13,13 +13,13 @@ async function bootstrap() {
   // クエリパラメータを自動で型変換する
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   // csrf対策
-  app.use(csurf());
+  // app.use(csurf());
   /**
    * Helmet
    * Helmetは、HTTPヘッダーを適切に設定する事で、よく知られたウェブの脆弱性からアプリケーションを保護してくれる.
    * 一般的に言うと、Helmetはセキュリティ関連のHTTPヘッダを設定する14個の小さなミドルウェア関数が構成される.
    */
-  app.use(helmet);
+  // app.use(helmet);
   // エンドポイントに/api/...のようにする
   app.setGlobalPrefix('api');
   // ポート3000でリクエストを待機
