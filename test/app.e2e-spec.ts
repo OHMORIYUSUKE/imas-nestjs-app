@@ -59,7 +59,7 @@ describe('AppController (e2e)', () => {
 
         // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
         return request(app.getHttpServer())
-          .get('/idols')
+          .get('/idols/search')
           .query({ name: '春香' })
           .set('Authorization', `Bearer ${access_token}`)
           .expect(200)
@@ -88,7 +88,7 @@ describe('AppController (e2e)', () => {
 
         // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
         return request(app.getHttpServer())
-          .get('/idols')
+          .get('/idols/search')
           .query({ name: 'あまみ' })
           .set('Authorization', `Bearer ${access_token}`)
           .expect(200)
@@ -117,12 +117,39 @@ describe('AppController (e2e)', () => {
 
         // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
         return request(app.getHttpServer())
-          .get('/idols')
+          .get('/idols/search')
           .set('Authorization', `Bearer ${access_token}`)
           .expect(200)
           .then((idolsResponse) => {
             // 適切なレスポンスを受け取ったことを確認
             expect(idolsResponse.body.length).toEqual(56);
+          });
+      });
+  });
+
+  it('/user/profile (GET)', () => {
+    const data = {
+      username: 'john',
+      password: 'changeme',
+    };
+
+    // ログインリクエストを送信してアクセストークンを取得
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .send(data)
+      .set('Content-Type', 'application/json')
+      .expect(201)
+      .then((loginResponse) => {
+        const { access_token } = loginResponse.body;
+
+        // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
+        return request(app.getHttpServer())
+          .get('/user/profile')
+          .set('Authorization', `Bearer ${access_token}`)
+          .expect(200)
+          .then((idolsResponse) => {
+            // 適切なレスポンスを受け取ったことを確認
+            expect(idolsResponse.body).toEqual({ userId: 1, username: 'john' });
           });
       });
   });

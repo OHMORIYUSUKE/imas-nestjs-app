@@ -1,26 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Query,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AuthGuard } from '@nestjs/passport';
-import { LocalAuthGuard } from './modules/auth/local-auth.guard';
-import { AuthService } from './modules/auth/auth.service';
-import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 
 /**
  * ルートコントローラ
  */
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 
   /**
    * 文字列(Hello World!)を返す
@@ -29,17 +15,5 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }

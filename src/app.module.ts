@@ -4,10 +4,8 @@ import { AppService } from './app.service';
 import { CorsMiddleware } from './middleware/cors.middleware';
 import { IdolsModule } from './modules/idols/idols.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UsersService } from './modules/users/users.service';
-import { UsersModule } from './modules/users/users.module';
-import { AuthService } from './modules/auth/auth.service';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './modules/users/users.module';
 
 /**
  * ルートモジュール
@@ -17,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     IdolsModule,
     AuthModule,
+    UsersModule,
     ConfigModule.forRoot({
       envFilePath: '.development.env',
     }),
