@@ -36,3 +36,7 @@ lerna-debug.log*
 
 # env
 .development.env
+
+# db
+/db/data/mysql/*
+/db/data/redis/*

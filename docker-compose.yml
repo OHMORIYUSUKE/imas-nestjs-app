@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    build: ./db
+    platform: 'linux/amd64'
+    volumes:
+      - ./db/data/mysql:/var/lib/mysql
+      - ./db/sql:/docker-entrypoint-initdb.d:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: imas
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - 6379:6379
+    volumes:
+      - ./db/data/redis:/data
