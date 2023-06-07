@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
  *
  * アイドルに関連する情報をルーティングする
  */
-@Controller()
+@Controller('idols')
 export class IdolsController {
   constructor(private readonly idolsService: IdolsService) {}
 
@@ -19,7 +19,7 @@ export class IdolsController {
    * @returns Promise<IGetIdolInfoArray>
    */
   @UseGuards(JwtAuthGuard)
-  @Get('idols')
+  @Get('search')
   async getIdols(@Query('name') name: string): Promise<IGetIdolInfoArray> {
     return this.idolsService.getIdols(name);
   }
