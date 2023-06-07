@@ -16,7 +16,9 @@ import { AuthController } from './auth.controller';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
+        // JWTシークレット
         secret: configService.get('JWT_SECRET_KEY'),
+        // JWTトークンの期間
         signOptions: { expiresIn: configService.get('JWT_EXPIRATION') },
       }),
       inject: [ConfigService],

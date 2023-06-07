@@ -21,6 +21,12 @@ export class UsersService {
     },
   ];
 
+  /**
+   * ユーザー情報を取得する
+   *
+   * @param username string
+   * @returns User
+   */
   async findOne(username: string): Promise<User | undefined> {
     return this.users.find((user) => user.username === username);
   }
