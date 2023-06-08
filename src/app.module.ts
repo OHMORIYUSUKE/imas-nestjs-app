@@ -25,10 +25,4 @@ import { UsersModule } from './modules/users/users.module';
   // プロバイダ(サービス)を登録する
   providers: [AppService],
 })
-export class AppModule {
-  // ミドルウェアを設定
-  configure(consumer: MiddlewareConsumer) {
-    // CorsMiddlewareを適用
-    consumer.apply(CorsMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

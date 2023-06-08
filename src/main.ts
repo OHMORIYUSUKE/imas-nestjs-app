@@ -1,29 +1,36 @@
 import { NestFactory } from '@nestjs/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify'; // 追加する行
+
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as csurf from 'csurf';
-import * as helmet from 'helmet';
+import helmet from '@fastify/helmet';
+import fastifyCsrf from '@fastify/csrf-protection';
+import fastifyCookie from '@fastify/cookie';
+import { CorsMiddleware } from './middleware/cors.middleware';
 
-/**
- * エントリーポイント
- */
 async function bootstrap() {
-  // ルートモジュールを登録
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+  );
+
   // クエリパラメータを自動で型変換する
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  // csrf対策
-  app.use(csurf());
+  // CorsMiddlewareを登録
+  app.use(new CorsMiddleware().use);
   /**
    * Helmet
    * Helmetは、HTTPヘッダーを適切に設定する事で、よく知られたウェブの脆弱性からアプリケーションを保護してくれる.
    * 一般的に言うと、Helmetはセキュリティ関連のHTTPヘッダを設定する14個の小さなミドルウェア関数が構成される.
    */
-  app.use(helmet);
+  await app.register(helmet);
+  // csrf対策
+  await app.register(fastifyCsrf);
   // エンドポイントに/api/...のようにする
   app.setGlobalPrefix('api');
-  // ポート3000でリクエストを待機
   await app.listen(3000);
 }
-// 起動
 bootstrap();

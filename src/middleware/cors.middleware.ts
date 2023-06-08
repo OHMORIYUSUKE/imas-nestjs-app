@@ -1,12 +1,12 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 /**
  * CORSのリクエストを許可する
  */
 @Injectable()
 export class CorsMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: FastifyRequest, res: FastifyReply, next: () => void) {
     // 全てのオリジンを許可
     res.header('Access-Control-Allow-Origin', '*');
     // 許可するヘッダーを指定

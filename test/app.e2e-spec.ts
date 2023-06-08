@@ -1,25 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication;
+  let app: NestFastifyApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
     await app.init();
   });
 
   it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+    return app.inject({ method: 'GET', url: '/' }).then((response) => {
+      expect(response.statusCode).toEqual(200);
+      expect(response.payload).toEqual('Hello World!');
+    });
   });
 
   it('/auth/login (POST)', () => {
@@ -28,16 +33,16 @@ describe('AppController (e2e)', () => {
       password: 'changeme',
     };
 
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(data)
-      .set('Content-Type', 'application/json')
-      .expect(201)
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
       .then((response) => {
-        // レスポンスのアクセストークンを取得
-        const { access_token } = response.body;
-
-        // アクセストークンが取得されていることを確認
+        expect(response.statusCode).toEqual(201);
+        const { access_token } = JSON.parse(response.payload);
         expect(access_token).toBeDefined();
       });
   });
@@ -48,25 +53,27 @@ describe('AppController (e2e)', () => {
       password: 'changeme',
     };
 
-    // ログインリクエストを送信してアクセストークンを取得
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(data)
-      .set('Content-Type', 'application/json')
-      .expect(201)
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
       .then((loginResponse) => {
-        const { access_token } = loginResponse.body;
+        const { access_token } = JSON.parse(loginResponse.payload);
 
-        // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
-        return request(app.getHttpServer())
-          .get('/idols/search')
-          .query({ name: '春香' })
-          .set('Authorization', `Bearer ${access_token}`)
-          .expect(200)
+        return app
+          .inject({
+            method: 'GET',
+            url: '/idols/search?name=春香',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
           .then((idolsResponse) => {
-            // 適切なレスポンスを受け取ったことを確認
-            expect(idolsResponse.body[0]['fullName']).toEqual('天海 春香');
-            expect(idolsResponse.body.length).toEqual(1);
+            expect(idolsResponse.statusCode).toEqual(200);
+            const idols = JSON.parse(idolsResponse.payload);
+            expect(idols[0]['fullName']).toEqual('天海 春香');
+            expect(idols.length).toEqual(1);
           });
       });
   });
@@ -77,25 +84,27 @@ describe('AppController (e2e)', () => {
       password: 'changeme',
     };
 
-    // ログインリクエストを送信してアクセストークンを取得
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(data)
-      .set('Content-Type', 'application/json')
-      .expect(201)
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
       .then((loginResponse) => {
-        const { access_token } = loginResponse.body;
+        const { access_token } = JSON.parse(loginResponse.payload);
 
-        // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
-        return request(app.getHttpServer())
-          .get('/idols/search')
-          .query({ name: 'あまみ' })
-          .set('Authorization', `Bearer ${access_token}`)
-          .expect(200)
+        return app
+          .inject({
+            method: 'GET',
+            url: '/idols/search?name=あまみ',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
           .then((idolsResponse) => {
-            // 適切なレスポンスを受け取ったことを確認
-            expect(idolsResponse.body[0]['fullName']).toEqual('天海 春香');
-            expect(idolsResponse.body.length).toEqual(1);
+            expect(idolsResponse.statusCode).toEqual(200);
+            const idols = JSON.parse(idolsResponse.payload);
+            expect(idols.length).toEqual(1);
+            expect(idols[0]['fullName']).toEqual('天海 春香');
           });
       });
   });
@@ -106,23 +115,26 @@ describe('AppController (e2e)', () => {
       password: 'changeme',
     };
 
-    // ログインリクエストを送信してアクセストークンを取得
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(data)
-      .set('Content-Type', 'application/json')
-      .expect(201)
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
       .then((loginResponse) => {
-        const { access_token } = loginResponse.body;
+        const { access_token } = JSON.parse(loginResponse.payload);
 
-        // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
-        return request(app.getHttpServer())
-          .get('/idols/search')
-          .set('Authorization', `Bearer ${access_token}`)
-          .expect(200)
+        return app
+          .inject({
+            method: 'GET',
+            url: '/idols/search',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
           .then((idolsResponse) => {
-            // 適切なレスポンスを受け取ったことを確認
-            expect(idolsResponse.body.length).toEqual(56);
+            expect(idolsResponse.statusCode).toEqual(200);
+            const idols = JSON.parse(idolsResponse.payload);
+            expect(idols.length).toEqual(56);
           });
       });
   });
@@ -133,23 +145,26 @@ describe('AppController (e2e)', () => {
       password: 'changeme',
     };
 
-    // ログインリクエストを送信してアクセストークンを取得
-    return request(app.getHttpServer())
-      .post('/auth/login')
-      .send(data)
-      .set('Content-Type', 'application/json')
-      .expect(201)
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
       .then((loginResponse) => {
-        const { access_token } = loginResponse.body;
+        const { access_token } = JSON.parse(loginResponse.payload);
 
-        // アクセストークンを使用して/idols?name=春香にGETリクエストを送信
-        return request(app.getHttpServer())
-          .get('/user/profile')
-          .set('Authorization', `Bearer ${access_token}`)
-          .expect(200)
-          .then((idolsResponse) => {
-            // 適切なレスポンスを受け取ったことを確認
-            expect(idolsResponse.body).toEqual({ userId: 1, username: 'john' });
+        return app
+          .inject({
+            method: 'GET',
+            url: '/user/profile',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((profileResponse) => {
+            expect(profileResponse.statusCode).toEqual(200);
+            const profile = JSON.parse(profileResponse.payload);
+            expect(profile).toEqual({ userId: 1, username: 'john' });
           });
       });
   });
