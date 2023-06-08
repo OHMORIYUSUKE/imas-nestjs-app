@@ -134,6 +134,7 @@ describe('AppController (e2e)', () => {
           .then((idolsResponse) => {
             expect(idolsResponse.statusCode).toEqual(200);
             const idols = JSON.parse(idolsResponse.payload);
+            console.log(idols);
             expect(idols.length).toEqual(56);
           });
       });
