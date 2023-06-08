@@ -32,7 +32,7 @@ export class IdolsService {
    * @param name アイドルの名前(部分一致)
    * @returns 画像のリンク
    */
-  getIdolsPicture(name: string): string {
+  getIdolsPicture(name: string): string | void {
     for (const idol of idolsPictures) {
       if (name.indexOf(idol.name) !== -1) {
         return idolsPicturesBaseUrl + '/' + idol.image + '.jpg';
