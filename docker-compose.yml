@@ -5,7 +5,7 @@ services:
     platform: 'linux/amd64'
     volumes:
       - ./db/data/mysql:/var/lib/mysql
-      - ./db/sql:/docker-entrypoint-initdb.d:ro
+      # - ./db/sql:/docker-entrypoint-initdb.d:ro
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: imas

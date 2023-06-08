@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrincessApiSdk } from 'princess-api-sdk';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
-import { idolsPictures, idolsPicturesBaseUrl } from './idolsPictures';
+import { Like, Repository } from 'typeorm';
+import { Idols } from './idols.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class IdolsService {
+  constructor(
+    @InjectRepository(Idols) private idolsRepository: Repository<Idols>,
+  ) {}
   /**
    * アイドルの情報を取得し、アイドルを検索する
    * 名前はカタカナ、漢字(部分一致)で検索可能
@@ -27,16 +32,19 @@ export class IdolsService {
 
   /**
    * アイドルの情報を取得し、アイドルの画像Urlを検索する
-   * 漢字(部分一致)で検索可能
+   * めい(部分一致)で検索可能
    *
-   * @param name アイドルの名前(部分一致)
+   * @param name アイドルの名前(めい)(部分一致)
    * @returns 画像のリンク
    */
-  getIdolsPicture(name: string): string | void {
-    for (const idol of idolsPictures) {
-      if (name.indexOf(idol.name) !== -1) {
-        return idolsPicturesBaseUrl + '/' + idol.image + '.jpg';
-      }
-    }
+  async getIdolsPicture(name: string): Promise<string | void> {
+    if (name === null) return;
+    const idol = await this.idolsRepository.findOne({
+      where: {
+        name: Like(`%${name}%`),
+      },
+    });
+    if (idol === null) return;
+    return idol.image;
   }
 }

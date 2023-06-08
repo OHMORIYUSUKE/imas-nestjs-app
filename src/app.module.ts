@@ -6,7 +6,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Idole } from './modules/idols/idols.entity';
 import { join } from 'path';
 
 /**
@@ -34,6 +33,7 @@ import { join } from 'path';
           database: configService.get('MYSQL_DATABASE'),
           entities: [join(__dirname + '/**/*.entity{.ts,.js}')],
           synchronize: true,
+          // logging: true,
         };
         return ormConfig;
       },
