@@ -16,11 +16,20 @@ export class IdolsController {
    * アイドルの情報を取得し、アイドルを検索する
    *
    * @param name アイドルの名前(部分一致)
-   * @returns Promise<IGetIdolInfoArray>
+   * @returns Promise<IGetIdolInfoArray & { image?: string }>
    */
   @UseGuards(JwtAuthGuard)
   @Get('search')
-  async getIdols(@Query('name') name: string): Promise<IGetIdolInfoArray> {
-    return this.idolsService.getIdols(name);
+  async getIdols(
+    @Query('name') name: string,
+  ): Promise<IGetIdolInfoArray & { image?: string }> {
+    const res = await this.idolsService.getIdols(name);
+    const resInImage = res.map((idol) => {
+      return {
+        ...idol,
+        image: this.idolsService.getIdolsPicture(idol.fullName),
+      };
+    });
+    return resInImage;
   }
 }
