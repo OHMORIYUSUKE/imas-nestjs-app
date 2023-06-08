@@ -20,6 +20,10 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterEach(async () => {
+    await app.close();
+  });
+
   it('/ (GET)', () => {
     return app.inject({ method: 'GET', url: '/' }).then((response) => {
       expect(response.statusCode).toEqual(200);

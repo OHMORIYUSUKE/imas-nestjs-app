@@ -23,13 +23,16 @@ export class IdolsController {
   async getIdols(
     @Query('name') name: string,
   ): Promise<IGetIdolInfoArray & { image?: string }> {
-    const res = await this.idolsService.getIdols(name);
-    const resInImage = res.map((idol) => {
-      return {
-        ...idol,
-        image: this.idolsService.getIdolsPicture(idol.fullName),
-      };
-    });
+    const res: IGetIdolInfoArray = await this.idolsService.getIdols(name);
+    const resInImage = await Promise.all(
+      res.map(async (idol) => {
+        const image = await this.idolsService.getIdolsPicture(idol.firstName);
+        return {
+          ...idol,
+          image: image,
+        };
+      }),
+    );
     return resInImage;
   }
 }
