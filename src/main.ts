@@ -8,8 +8,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from '@fastify/helmet';
 import fastifyCsrf from '@fastify/csrf-protection';
-import fastifyCookie from '@fastify/cookie';
-import { CorsMiddleware } from './middleware/cors.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -19,8 +17,11 @@ async function bootstrap() {
 
   // クエリパラメータを自動で型変換する
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  // CorsMiddlewareを登録
-  app.use(new CorsMiddleware().use);
+  // cors
+  app.enableCors({
+    origin: '*',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+  });
   /**
    * Helmet
    * Helmetは、HTTPヘッダーを適切に設定する事で、よく知られたウェブの脆弱性からアプリケーションを保護してくれる.
