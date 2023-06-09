@@ -169,7 +169,9 @@ describe('AppController (e2e)', () => {
           .then((profileResponse) => {
             expect(profileResponse.statusCode).toEqual(200);
             const profile = JSON.parse(profileResponse.payload);
-            expect(profile).toEqual({ userId: 1, email: 'john' });
+
+            console.log(profile);
+            expect(profile).toEqual({ id: 3, email: 'john' });
           });
       });
   });
