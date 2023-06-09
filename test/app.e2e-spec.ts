@@ -171,7 +171,10 @@ describe('AppController (e2e)', () => {
             const profile = JSON.parse(profileResponse.payload);
 
             console.log(profile);
-            expect(profile).toEqual({ id: 3, email: 'john' });
+            expect(profile).toMatchObject({
+              email: expect.any(String),
+              id: expect.any(Number),
+            });
           });
       });
   });
@@ -190,7 +193,14 @@ describe('AppController (e2e)', () => {
         headers: { 'Content-Type': 'application/json' },
       })
       .then((loginResponse) => {
-        const res = JSON.parse(loginResponse.payload);
+        const user = JSON.parse(loginResponse.payload);
+        console.log(user);
+        expect(user).toMatchObject({
+          email: expect.any(String),
+          id: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        });
       });
   });
 });

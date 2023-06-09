@@ -2,6 +2,7 @@ import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { UsersService } from '../users/users.service';
+import { UsersWithoutPassword } from '../users/users.entity';
 
 export class CreateUserDto {
   readonly email: string;
@@ -31,11 +32,11 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signUp(@Body() createUserDto: CreateUserDto) {
+  async signUp(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<UsersWithoutPassword> {
     const user = await this.userService.createUser(createUserDto);
-    return {
-      message: 'User created successfully',
-      user,
-    };
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }
