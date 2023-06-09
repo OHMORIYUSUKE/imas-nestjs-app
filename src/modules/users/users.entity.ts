@@ -7,15 +7,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Idols {
+export class Users {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
   @Column({ name: 'name', type: 'varchar' })
-  readonly name: string;
+  name: string;
 
-  @Column({ name: 'image', type: 'text' })
-  readonly image: string;
+  @Column({ name: 'password', type: 'text' })
+  password: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   readonly createdAt: Date;
