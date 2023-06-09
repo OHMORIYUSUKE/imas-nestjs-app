@@ -11,8 +11,8 @@ export class Users {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @Column({ name: 'name', type: 'varchar' })
-  name: string;
+  @Column({ name: 'email', type: 'varchar' })
+  email: string;
 
   @Column({ name: 'password', type: 'text' })
   password: string;

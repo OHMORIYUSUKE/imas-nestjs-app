@@ -33,7 +33,7 @@ describe('AppController (e2e)', () => {
 
   it('/auth/login (POST)', () => {
     const data = {
-      username: 'john',
+      email: 'john',
       password: 'changeme',
     };
 
@@ -53,7 +53,7 @@ describe('AppController (e2e)', () => {
 
   it('/idols?name=春香 (GET)', () => {
     const data = {
-      username: 'john',
+      email: 'john',
       password: 'changeme',
     };
 
@@ -84,7 +84,7 @@ describe('AppController (e2e)', () => {
 
   it('/idols?name=あまみ (GET)', () => {
     const data = {
-      username: 'john',
+      email: 'john',
       password: 'changeme',
     };
 
@@ -115,7 +115,7 @@ describe('AppController (e2e)', () => {
 
   it('/idols (GET)', () => {
     const data = {
-      username: 'john',
+      email: 'john',
       password: 'changeme',
     };
 
@@ -146,7 +146,7 @@ describe('AppController (e2e)', () => {
 
   it('/user/profile (GET)', () => {
     const data = {
-      username: 'john',
+      email: 'john',
       password: 'changeme',
     };
 
@@ -169,7 +169,8 @@ describe('AppController (e2e)', () => {
           .then((profileResponse) => {
             expect(profileResponse.statusCode).toEqual(200);
             const profile = JSON.parse(profileResponse.payload);
-            expect(profile).toEqual({ userId: 1, username: 'john' });
+            console.log(profile);
+            expect(profile).toEqual({ userId: 1, email: 'john' });
           });
       });
   });
