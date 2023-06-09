@@ -1,8 +1,10 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsersService } from './users.service';
 
 @Controller('user')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
   /**
    * ユーザー情報を取得する
    * headerにJWTトークンを付与する
@@ -12,7 +14,9 @@ export class UsersController {
    */
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const user = await this.usersService.findById(req.user.userId);
+    const { password, ...userNotPassword } = user;
+    return userNotPassword;
   }
 }

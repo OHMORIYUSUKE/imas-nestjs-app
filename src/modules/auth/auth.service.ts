@@ -11,18 +11,18 @@ export class AuthService {
   ) {}
 
   async validateUser(
-    username: string,
+    email: string,
     pass: string,
   ): Promise<{
     userId: number;
-    username: string;
+    email: string;
   } | null> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findByEmail(email);
     if (user === null) {
       return null;
     }
     const flag = await this.verifyPassword(pass, user.password);
-    if (flag) {
+    if (user && user.password == pass) {
       const { password, ...result } = user;
       return result;
     }
@@ -38,8 +38,8 @@ export class AuthService {
     return isMatch;
   }
 
-  async login(user: { username: string; userId: string }) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: { email: string; userId: string }) {
+    const payload = { email: user.email, sub: user.userId };
     return {
       access_token: this.jwtService.sign(payload),
     };
