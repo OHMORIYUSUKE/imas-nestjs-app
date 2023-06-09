@@ -60,3 +60,9 @@ VALUES
   ('https://raw.githubusercontent.com/tankarup/ML-4koma-viewer/main/icons/sika.jpg', '詩花'),
   ('https://raw.githubusercontent.com/tankarup/ML-4koma-viewer/main/icons/leon.jpg', '玲音'),
   ('https://raw.githubusercontent.com/tankarup/ML-4koma-viewer/main/icons/kuroi.jpg', '黒井社長');
+
+
+INSERT INTO users (email, password)
+VALUES
+  ('john', 'changeme'),
+  ('maria', 'guess');

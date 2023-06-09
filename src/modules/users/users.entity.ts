@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
 @Entity()
@@ -23,3 +24,5 @@ export class Users {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   readonly updatedAt: Date;
 }
+
+export type UsersWithoutPassword = Omit<Users, 'password'>;

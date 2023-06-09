@@ -2,6 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { UsersWithoutPassword } from '../users/users.entity';
 
 /**
  * PassportStrategyを継承し独自のバリデーションを行う
@@ -15,10 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(
     email: string,
     password: string,
-  ): Promise<{
-    userId: number;
-    email: string;
-  }> {
+  ): Promise<UsersWithoutPassword> {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException();
