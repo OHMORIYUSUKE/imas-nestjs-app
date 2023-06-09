@@ -173,4 +173,22 @@ describe('AppController (e2e)', () => {
           });
       });
   });
+
+  it('/auth/signup (POST)', () => {
+    const data = {
+      email: 'john!!',
+      password: 'changeme!!',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/signup',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const res = JSON.parse(loginResponse.payload);
+      });
+  });
 });
