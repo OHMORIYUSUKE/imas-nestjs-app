@@ -12,7 +12,7 @@ export class Users {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @Column({ name: 'email', type: 'varchar' })
+  @PrimaryColumn({ name: 'email', type: 'varchar' })
   email: string;
 
   @Column({ name: 'password', type: 'text' })

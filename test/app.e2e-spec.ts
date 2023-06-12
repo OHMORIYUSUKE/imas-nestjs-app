@@ -31,6 +31,31 @@ describe('AppController (e2e)', () => {
     });
   });
 
+  it('/auth/signup (POST)', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/signup',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const user = JSON.parse(loginResponse.payload);
+        console.log(user);
+        expect(user).toMatchObject({
+          email: expect.any(String),
+          id: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        });
+      });
+  });
+
   it('/auth/login (POST)', () => {
     const data = {
       email: 'john',
@@ -176,31 +201,6 @@ describe('AppController (e2e)', () => {
               id: expect.any(Number),
             });
           });
-      });
-  });
-
-  it('/auth/signup (POST)', () => {
-    const data = {
-      email: 'john!!',
-      password: 'changeme!!',
-    };
-
-    return app
-      .inject({
-        method: 'POST',
-        url: '/auth/signup',
-        payload: data,
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then((loginResponse) => {
-        const user = JSON.parse(loginResponse.payload);
-        console.log(user);
-        expect(user).toMatchObject({
-          email: expect.any(String),
-          id: expect.any(Number),
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-        });
       });
   });
 });
