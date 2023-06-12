@@ -31,7 +31,7 @@ export class IdolsController {
    * @returns Promise<IGetIdolInfoArray & { image?: string }>
    */
   @UseGuards(JwtAuthGuard)
-  @Post('favorite_idol')
+  @Post('favorite')
   async postFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
     @Body() favoriteIdolDto: FavoriteIdolDto,

@@ -224,7 +224,7 @@ describe('AppController (e2e)', () => {
         return app
           .inject({
             method: 'POST',
-            url: '/idols/favorite_idol',
+            url: '/idols/favorite',
             payload: data,
             headers: { Authorization: `Bearer ${access_token}` },
           })
