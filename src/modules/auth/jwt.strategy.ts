@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { UsersWithoutPassword } from '../users/users.entity';
 
 /**
  * ToDo
@@ -17,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: { id: string; email: string }) {
-    return { id: payload.id, email: payload.email };
+  async validate(payload: UsersWithoutPassword) {
+    return payload;
   }
 }

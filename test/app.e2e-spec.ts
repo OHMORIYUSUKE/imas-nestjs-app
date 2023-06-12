@@ -46,7 +46,6 @@ describe('AppController (e2e)', () => {
       })
       .then((loginResponse) => {
         const user = JSON.parse(loginResponse.payload);
-        console.log(user);
         expect(user).toMatchObject({
           email: expect.any(String),
           id: expect.any(Number),
@@ -163,7 +162,6 @@ describe('AppController (e2e)', () => {
           .then((idolsResponse) => {
             expect(idolsResponse.statusCode).toEqual(200);
             const idols = JSON.parse(idolsResponse.payload);
-            console.log(idols);
             expect(idols.length).toEqual(56);
           });
       });

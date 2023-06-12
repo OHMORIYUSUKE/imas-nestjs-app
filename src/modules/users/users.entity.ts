@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity()
+@Unique(['email'])
 export class Users {
   @PrimaryGeneratedColumn()
   readonly id: number;
