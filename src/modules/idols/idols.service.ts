@@ -80,4 +80,18 @@ export class IdolsService {
       idolId: idolId,
     });
   }
+
+  /**
+   * アイドルのいいねを消す
+   *
+   * @param id
+   * @returns
+   */
+  async removeFavoriteIdol(userId: number, idolId: number): Promise<void> {
+    if (userId === null || idolId === null) return;
+    await this.favoriteIdolsRepository.delete({
+      userId: userId,
+      idolId: idolId,
+    });
+  }
 }
