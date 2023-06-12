@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Users, UsersWithoutPassword } from '../users/users.entity';
+import { CreateUserDto } from './auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -19,19 +20,24 @@ export class AuthService {
     if (user === null) {
       return null;
     }
-    const flag = await this.verifyPassword(pass, user.password);
-    if (user && user.password == pass) {
+    const isPasswordMatch = await this.verifyPassword(pass, user.password);
+    if (isPasswordMatch) {
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
+  async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  }
+
   async verifyPassword(
     plainPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    // パスワードをハッシュ化して比較
     const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
     return isMatch;
   }
@@ -41,5 +47,15 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async signUp(createUserDto: CreateUserDto) {
+    const hashedPassword = await this.hashPassword(createUserDto.password);
+    const user = await this.usersService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

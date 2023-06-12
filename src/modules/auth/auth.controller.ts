@@ -14,10 +14,7 @@ export class CreateUserDto {
  */
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   /**
    * ログイン処理
@@ -35,8 +32,7 @@ export class AuthController {
   async signUp(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UsersWithoutPassword> {
-    const user = await this.userService.createUser(createUserDto);
-    const { password, ...userWithoutPassword } = user;
+    const userWithoutPassword = await this.authService.signUp(createUserDto);
     return userWithoutPassword;
   }
 }
