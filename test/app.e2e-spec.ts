@@ -202,7 +202,7 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  it('/idols/favorite_idol (POST)', () => {
+  it('/idols/favorite (POST)', () => {
     const data = {
       email: 'john',
       password: 'changeme',
@@ -230,6 +230,40 @@ describe('AppController (e2e)', () => {
           })
           .then((response) => {
             expect(response.statusCode).toEqual(201);
+          });
+      });
+  });
+
+  it('/idols/favorite (GET)', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        const data = {
+          idolId: 1,
+        };
+        return app
+          .inject({
+            method: 'GET',
+            url: '/idols/favorite',
+            payload: data,
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((response) => {
+            expect(response.statusCode).toEqual(200);
+            const idols = JSON.parse(response.payload);
+            expect(idols.length).toEqual(1);
           });
       });
   });

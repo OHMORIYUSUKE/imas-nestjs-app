@@ -11,6 +11,7 @@ import { IdolsService } from './idols.service';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersWithoutPassword } from '../users/users.entity';
+import { FavoriteIdols } from './idols.entity';
 
 type FavoriteIdolDto = {
   idolId: number;
@@ -43,7 +44,15 @@ export class IdolsController {
     return;
   }
 
-  ////
+  @UseGuards(JwtAuthGuard)
+  @Get('favorite')
+  async getFavoriteIdol(
+    @Request() req: { user: UsersWithoutPassword },
+  ): Promise<FavoriteIdols[]> {
+    const res = await this.idolsService.getFavoriteIdolsByUserId(req.user.id);
+    return res;
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('search')
   async getIdols(
