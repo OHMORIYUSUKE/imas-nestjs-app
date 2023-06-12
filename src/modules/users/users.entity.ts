@@ -6,7 +6,10 @@ import {
   UpdateDateColumn,
   PrimaryColumn,
   Unique,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
+import { FavoriteIdols } from '../idols/idols.entity';
 
 @Entity()
 @Unique(['email'])
