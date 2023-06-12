@@ -28,6 +28,12 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  /**
+   * ユーザー作成
+   *
+   * @param createUserDto
+   * @returns
+   */
   @Post('signup')
   async signUp(
     @Body() createUserDto: CreateUserDto,

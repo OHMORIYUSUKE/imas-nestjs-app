@@ -28,13 +28,26 @@ export class AuthService {
     return null;
   }
 
-  async hashPassword(password: string): Promise<string> {
+  /**
+   * パスワードをハッシュ化する
+   *
+   * @param password
+   * @returns
+   */
+  private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   }
 
-  async verifyPassword(
+  /**
+   * パスワードとハッシュ化されているパスワードが一致しているか確認する
+   *
+   * @param plainPassword
+   * @param hashedPassword
+   * @returns
+   */
+  private async verifyPassword(
     plainPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
@@ -42,6 +55,13 @@ export class AuthService {
     return isMatch;
   }
 
+  /**
+   * JWTのペイロードを作成しログイン
+   * トークンを発行する
+   *
+   * @param user
+   * @returns
+   */
   async login(user: UsersWithoutPassword) {
     const payload: UsersWithoutPassword = user;
     return {
@@ -49,6 +69,14 @@ export class AuthService {
     };
   }
 
+  /**
+   * ユーザー作成
+   *
+   * パスワードをハッシュ化してDBに保存
+   *
+   * @param createUserDto
+   * @returns
+   */
   async signUp(createUserDto: CreateUserDto) {
     const hashedPassword = await this.hashPassword(createUserDto.password);
     const user = await this.usersService.createUser({
