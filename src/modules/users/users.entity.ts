@@ -12,7 +12,7 @@ import {
 import { FavoriteIdols } from '../idols/idols.entity';
 
 @Entity()
-@Unique(['email'])
+// @Unique(['email'])
 export class Users {
   @PrimaryGeneratedColumn()
   readonly id: number;

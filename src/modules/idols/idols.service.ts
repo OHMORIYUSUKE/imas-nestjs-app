@@ -2,13 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PrincessApiSdk } from 'princess-api-sdk';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { Like, Repository } from 'typeorm';
-import { Idols } from './idols.entity';
+import { FavoriteIdols, Idols } from './idols.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class IdolsService {
   constructor(
     @InjectRepository(Idols) private idolsRepository: Repository<Idols>,
+    @InjectRepository(FavoriteIdols)
+    private favoriteIdolsRepository: Repository<FavoriteIdols>,
   ) {}
   /**
    * アイドルの情報を取得し、アイドルを検索する
@@ -46,5 +48,36 @@ export class IdolsService {
     });
     if (idol === null) return;
     return idol.image;
+  }
+
+  /**
+   * user idをもとにいいねしたアイドルを検索する
+   *
+   * @param id
+   * @returns
+   */
+  async getFavoriteIdolsByUserId(id: number): Promise<FavoriteIdols[]> {
+    if (id === null) return;
+    const idols = await this.favoriteIdolsRepository.find({
+      where: {
+        userId: id,
+      },
+    });
+    if (idols === null) return;
+    return idols;
+  }
+
+  /**
+   * アイドルにいいねする
+   *
+   * @param id
+   * @returns
+   */
+  async addFavoriteIdol(userId: number, idolId: number): Promise<void> {
+    if (userId === null || idolId === null) return;
+    await this.favoriteIdolsRepository.insert({
+      userId: userId,
+      idolId: idolId,
+    });
   }
 }

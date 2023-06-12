@@ -201,4 +201,36 @@ describe('AppController (e2e)', () => {
           });
       });
   });
+
+  it('/idols/favorite_idol (POST)', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        const data = {
+          idolId: 1,
+        };
+        return app
+          .inject({
+            method: 'POST',
+            url: '/idols/favorite_idol',
+            payload: data,
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((response) => {
+            expect(response.statusCode).toEqual(201);
+          });
+      });
+  });
 });

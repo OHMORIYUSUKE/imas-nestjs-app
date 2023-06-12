@@ -1,8 +1,20 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  Post,
+  Request,
+  Body,
+} from '@nestjs/common';
 import { IdolsService } from './idols.service';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsersWithoutPassword } from '../users/users.entity';
 
+type FavoriteIdolDto = {
+  idolId: number;
+};
 /**
  * idolsコントローラ
  *
@@ -18,6 +30,20 @@ export class IdolsController {
    * @param name アイドルの名前(部分一致)
    * @returns Promise<IGetIdolInfoArray & { image?: string }>
    */
+  @UseGuards(JwtAuthGuard)
+  @Post('favorite_idol')
+  async postFavoriteIdol(
+    @Request() req: { user: UsersWithoutPassword },
+    @Body() favoriteIdolDto: FavoriteIdolDto,
+  ): Promise<IGetIdolInfoArray & { image?: string }> {
+    await this.idolsService.addFavoriteIdol(
+      req.user.id,
+      favoriteIdolDto.idolId,
+    );
+    return;
+  }
+
+  ////
   @UseGuards(JwtAuthGuard)
   @Get('search')
   async getIdols(
