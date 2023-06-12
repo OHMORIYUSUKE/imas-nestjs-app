@@ -5,10 +5,15 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { AppModule } from './../src/app.module';
+import { Users } from './../src/modules/users/users.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 describe('AppController (e2e)', () => {
   let app: NestFastifyApplication;
+  let mockRepository: Repository<Users>;
 
+  // 各テスト実行時に呼ばれる
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -17,9 +22,15 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter(),
     );
+
+    mockRepository = moduleFixture.get<Repository<Users>>(
+      getRepositoryToken(Users),
+    );
+    // await mockRepository.clear();
     await app.init();
   });
 
+  // 各テスト終了時に呼ばれる
   afterEach(async () => {
     await app.close();
   });
