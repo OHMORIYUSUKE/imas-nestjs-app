@@ -68,8 +68,8 @@ describe('AppController (e2e)', () => {
 
   it('/auth/signup (POST)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -92,8 +92,8 @@ describe('AppController (e2e)', () => {
 
   it('/auth/signup (POST) すでに存在しているユーザー', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -110,8 +110,8 @@ describe('AppController (e2e)', () => {
 
   it('/auth/login (POST)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -130,8 +130,8 @@ describe('AppController (e2e)', () => {
 
   it('/auth/login (POST) 存在しないユーザー', () => {
     const data = {
-      email: 'john___',
-      password: 'changeme',
+      email: 'uutan1108@test.com___',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -148,8 +148,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols?name=春香 (GET)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -182,8 +182,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols?name=あまみ (GET)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -213,8 +213,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols (GET)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -243,8 +243,8 @@ describe('AppController (e2e)', () => {
 
   it('/user/profile (GET)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -276,8 +276,8 @@ describe('AppController (e2e)', () => {
 
   it('/user/profile (GET) 存在しないユーザー', () => {
     const data = {
-      email: 'john__',
-      password: 'changeme',
+      email: 'uutan1108@test.com__',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -304,8 +304,8 @@ describe('AppController (e2e)', () => {
 
   it('/user/profile (GET) 誤ったパスワード', () => {
     const data = {
-      email: 'john',
-      password: 'changeme__',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password__',
     };
 
     return app
@@ -332,8 +332,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols/favorite (POST)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -364,8 +364,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols/favorite (POST) すでにいいねしている', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -396,8 +396,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols/favorite (GET)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -430,8 +430,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols/favorite (DELETE)', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app
@@ -462,8 +462,8 @@ describe('AppController (e2e)', () => {
 
   it('/idols/favorite (DELETE) すでに削除されている', () => {
     const data = {
-      email: 'john',
-      password: 'changeme',
+      email: 'uutan1108@test.com',
+      password: 'uutan1108_password',
     };
 
     return app

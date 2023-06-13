@@ -35,6 +35,6 @@ async function bootstrap() {
   await app.register(fastifyCsrf);
   // エンドポイントに/api/...のようにする
   app.setGlobalPrefix('api');
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
