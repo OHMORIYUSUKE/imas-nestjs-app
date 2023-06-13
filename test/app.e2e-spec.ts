@@ -9,6 +9,7 @@ import { Users } from './../src/modules/users/users.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FavoriteIdols, Idols } from './../src/modules/idols/idols.entity';
+import { IDOLS_DATA } from './data/idols';
 
 describe('AppController (e2e)', () => {
   let app: NestFastifyApplication;
@@ -29,7 +30,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -47,7 +48,8 @@ describe('AppController (e2e)', () => {
       getRepositoryToken(FavoriteIdols),
     );
     await mockUsersRepository.clear();
-    // await mockIdolsRepository.clear();
+    await mockIdolsRepository.clear();
+    await mockIdolsRepository.insert(IDOLS_DATA);
     await mockFavoriteIdolsRepository.clear();
     await app.close();
   });
