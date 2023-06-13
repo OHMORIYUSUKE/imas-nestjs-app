@@ -23,7 +23,8 @@ async function bootstrap() {
   // cors
   app.enableCors({
     origin: '*',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    allowedHeaders:
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
   /**
    * Helmet
