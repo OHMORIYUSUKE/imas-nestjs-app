@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../auth/auth.controller';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './users.entity';
@@ -16,7 +16,7 @@ export class UsersService {
    * @param email string
    * @returns User
    */
-  async findByEmail(email: string): Promise<Users | undefined> {
+  async findByEmail(email: string): Promise<Users> {
     const user = await this.usersRepository.findOne({
       where: {
         email: email,
@@ -34,6 +34,10 @@ export class UsersService {
   async createUser(
     createUserDto: CreateUserDto,
   ): Promise<CreateUserDto & Users> {
+    const user = await this.findByEmail(createUserDto.email);
+    if (user) {
+      throw new ConflictException();
+    }
     const createdUser = await this.usersRepository.save(createUserDto);
     return createdUser;
   }

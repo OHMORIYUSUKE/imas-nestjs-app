@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { Users } from '../users/users.entity';
 
@@ -28,6 +29,7 @@ export class Idols {
 }
 
 @Entity()
+@Index(['userId', 'idolId'], { unique: true })
 export class FavoriteIdols {
   @PrimaryGeneratedColumn()
   readonly id: number;

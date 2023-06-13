@@ -8,10 +8,13 @@ import { AppModule } from './../src/app.module';
 import { Users } from './../src/modules/users/users.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FavoriteIdols, Idols } from './../src/modules/idols/idols.entity';
 
 describe('AppController (e2e)', () => {
   let app: NestFastifyApplication;
-  let mockRepository: Repository<Users>;
+  let mockUsersRepository: Repository<Users>;
+  let mockIdolsRepository: Repository<Idols>;
+  let mockFavoriteIdolsRepository: Repository<FavoriteIdols>;
 
   // 各テスト実行時に呼ばれる
   beforeEach(async () => {
@@ -23,11 +26,30 @@ describe('AppController (e2e)', () => {
       new FastifyAdapter(),
     );
 
-    mockRepository = moduleFixture.get<Repository<Users>>(
+    await app.init();
+  });
+
+  afterAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
+
+    mockUsersRepository = moduleFixture.get<Repository<Users>>(
       getRepositoryToken(Users),
     );
-    // await mockRepository.clear();
-    await app.init();
+    mockIdolsRepository = moduleFixture.get<Repository<Idols>>(
+      getRepositoryToken(Idols),
+    );
+    mockFavoriteIdolsRepository = moduleFixture.get<Repository<FavoriteIdols>>(
+      getRepositoryToken(FavoriteIdols),
+    );
+    await mockUsersRepository.clear();
+    // await mockIdolsRepository.clear();
+    await mockFavoriteIdolsRepository.clear();
+    await app.close();
   });
 
   // 各テスト終了時に呼ばれる
@@ -66,6 +88,24 @@ describe('AppController (e2e)', () => {
       });
   });
 
+  it('/auth/signup (POST) すでに存在しているユーザー', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/signup',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        expect(loginResponse.statusCode).toEqual(409);
+      });
+  });
+
   it('/auth/login (POST)', () => {
     const data = {
       email: 'john',
@@ -83,6 +123,24 @@ describe('AppController (e2e)', () => {
         expect(response.statusCode).toEqual(201);
         const { access_token } = JSON.parse(response.payload);
         expect(access_token).toBeDefined();
+      });
+  });
+
+  it('/auth/login (POST) 存在しないユーザー', () => {
+    const data = {
+      email: 'john___',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((response) => {
+        expect(response.statusCode).toEqual(401);
       });
   });
 
@@ -111,7 +169,11 @@ describe('AppController (e2e)', () => {
           .then((idolsResponse) => {
             expect(idolsResponse.statusCode).toEqual(200);
             const idols = JSON.parse(idolsResponse.payload);
+            console.log(idols);
             expect(idols[0]['fullName']).toEqual('天海 春香');
+            expect(idols[0]['image']).toEqual(
+              'https://raw.githubusercontent.com/tankarup/ML-4koma-viewer/main/icons/haruka.jpg',
+            );
             expect(idols.length).toEqual(1);
           });
       });
@@ -203,12 +265,66 @@ describe('AppController (e2e)', () => {
           .then((profileResponse) => {
             expect(profileResponse.statusCode).toEqual(200);
             const profile = JSON.parse(profileResponse.payload);
-
-            console.log(profile);
             expect(profile).toMatchObject({
               email: expect.any(String),
               id: expect.any(Number),
             });
+          });
+      });
+  });
+
+  it('/user/profile (GET) 存在しないユーザー', () => {
+    const data = {
+      email: 'john__',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        return app
+          .inject({
+            method: 'GET',
+            url: '/user/profile',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((profileResponse) => {
+            expect(profileResponse.statusCode).toEqual(401);
+          });
+      });
+  });
+
+  it('/user/profile (GET) 誤ったパスワード', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme__',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        return app
+          .inject({
+            method: 'GET',
+            url: '/user/profile',
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((profileResponse) => {
+            expect(profileResponse.statusCode).toEqual(401);
           });
       });
   });
@@ -241,6 +357,38 @@ describe('AppController (e2e)', () => {
           })
           .then((response) => {
             expect(response.statusCode).toEqual(201);
+          });
+      });
+  });
+
+  it('/idols/favorite (POST) すでにいいねしている', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        const data = {
+          idolId: 1,
+        };
+        return app
+          .inject({
+            method: 'POST',
+            url: '/idols/favorite',
+            payload: data,
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((response) => {
+            expect(response.statusCode).toEqual(409);
           });
       });
   });
@@ -307,6 +455,38 @@ describe('AppController (e2e)', () => {
           })
           .then((response) => {
             expect(response.statusCode).toEqual(200);
+          });
+      });
+  });
+
+  it('/idols/favorite (DELETE) すでに削除されている', () => {
+    const data = {
+      email: 'john',
+      password: 'changeme',
+    };
+
+    return app
+      .inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: data,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((loginResponse) => {
+        const { access_token } = JSON.parse(loginResponse.payload);
+
+        const data = {
+          idolId: 1,
+        };
+        return app
+          .inject({
+            method: 'DELETE',
+            url: '/idols/favorite',
+            payload: data,
+            headers: { Authorization: `Bearer ${access_token}` },
+          })
+          .then((response) => {
+            expect(response.statusCode).toEqual(409);
           });
       });
   });

@@ -8,6 +8,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from '@fastify/helmet';
 import fastifyCsrf from '@fastify/csrf-protection';
+import { ConflictFilter } from './errors/ConflictException';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -17,6 +18,8 @@ async function bootstrap() {
 
   // クエリパラメータを自動で型変換する
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  // errors
+  app.useGlobalFilters(new ConflictFilter());
   // cors
   app.enableCors({
     origin: '*',

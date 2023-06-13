@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { PrincessApiSdk } from 'princess-api-sdk';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { Like, Repository } from 'typeorm';
@@ -67,6 +67,22 @@ export class IdolsService {
     return idols;
   }
 
+  private async isAlreadyFavorite(
+    userId: number,
+    idolId: number,
+  ): Promise<boolean> {
+    const idol = await this.favoriteIdolsRepository.findOne({
+      where: {
+        userId: userId,
+        idolId: idolId,
+      },
+    });
+    if (idol) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
    * アイドルにいいねする
    *
@@ -75,6 +91,10 @@ export class IdolsService {
    */
   async addFavoriteIdol(userId: number, idolId: number): Promise<void> {
     if (userId === null || idolId === null) return;
+    const isAlreadyFavorite = await this.isAlreadyFavorite(userId, idolId);
+    if (isAlreadyFavorite) {
+      throw new ConflictException();
+    }
     await this.favoriteIdolsRepository.insert({
       userId: userId,
       idolId: idolId,
@@ -89,6 +109,10 @@ export class IdolsService {
    */
   async removeFavoriteIdol(userId: number, idolId: number): Promise<void> {
     if (userId === null || idolId === null) return;
+    const isAlreadyFavorite = await this.isAlreadyFavorite(userId, idolId);
+    if (!isAlreadyFavorite) {
+      throw new ConflictException();
+    }
     await this.favoriteIdolsRepository.delete({
       userId: userId,
       idolId: idolId,
