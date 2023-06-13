@@ -169,7 +169,6 @@ describe('AppController (e2e)', () => {
           .then((idolsResponse) => {
             expect(idolsResponse.statusCode).toEqual(200);
             const idols = JSON.parse(idolsResponse.payload);
-            console.log(idols);
             expect(idols[0]['fullName']).toEqual('天海 春香');
             expect(idols[0]['image']).toEqual(
               'https://raw.githubusercontent.com/tankarup/ML-4koma-viewer/main/icons/haruka.jpg',
