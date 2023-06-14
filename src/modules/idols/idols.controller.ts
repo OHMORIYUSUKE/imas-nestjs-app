@@ -7,6 +7,7 @@ import {
   Request,
   Body,
   Delete,
+  Param,
 } from '@nestjs/common';
 import { IdolsService } from './idols.service';
 import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
@@ -67,15 +68,12 @@ export class IdolsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('favorite')
+  @Delete('favorite/:id')
   async removeFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
-    @Body() favoriteIdolDto: FavoriteIdolDto,
+    @Param('id') id: number,
   ): Promise<FavoriteIdols[]> {
-    await this.idolsService.removeFavoriteIdol(
-      req.user.id,
-      favoriteIdolDto.idolId,
-    );
+    await this.idolsService.removeFavoriteIdol(req.user.id, id);
     return;
   }
 

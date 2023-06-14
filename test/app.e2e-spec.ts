@@ -451,8 +451,7 @@ describe('AppController (e2e)', () => {
         return app
           .inject({
             method: 'DELETE',
-            url: '/idols/favorite',
-            payload: data,
+            url: `/idols/favorite/${data.idolId}`,
             headers: { Authorization: `Bearer ${access_token}` },
           })
           .then((response) => {
@@ -483,8 +482,7 @@ describe('AppController (e2e)', () => {
         return app
           .inject({
             method: 'DELETE',
-            url: '/idols/favorite',
-            payload: data,
+            url: `/idols/favorite/${data.idolId}`,
             headers: { Authorization: `Bearer ${access_token}` },
           })
           .then((response) => {
