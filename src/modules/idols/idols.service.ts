@@ -88,10 +88,7 @@ export class IdolsService {
     return idols;
   }
 
-  private async isAlreadyFavorite(
-    userId: number,
-    idolId: number,
-  ): Promise<boolean> {
+  async isAlreadyFavorite(userId: number, idolId: number): Promise<boolean> {
     const idol = await this.favoriteIdolsRepository.findOne({
       where: {
         userId: userId,

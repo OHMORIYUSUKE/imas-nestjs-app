@@ -50,16 +50,15 @@ export class IdolsController {
   @Get('favorite')
   async getFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
-  ): Promise<IGetIdolInfoArray & { image?: string }> {
+  ): Promise<IGetIdolInfoArray & { image?: string; favorite?: boolean }> {
     const res = await this.idolsService.getFavoriteIdolsByUserId(req.user.id);
     const result = await Promise.all(
-      res.map(async (idol) => {
-        const favoriteIdol = await this.idolsService.getIdolsById(idol.idolId);
-        const image = await this.idolsService.getIdolsPicture(
-          favoriteIdol.firstName,
-        );
+      res.map(async (favoriteIdol) => {
+        const idol = await this.idolsService.getIdolsById(favoriteIdol.idolId);
+        const image = await this.idolsService.getIdolsPicture(idol.firstName);
         return {
-          ...favoriteIdol,
+          ...idol,
+          favorite: true,
           image: image,
         };
       }),
@@ -80,14 +79,20 @@ export class IdolsController {
   @UseGuards(JwtAuthGuard)
   @Get('search')
   async getIdols(
+    @Request() req: { user: UsersWithoutPassword },
     @Query('name') name: string,
-  ): Promise<IGetIdolInfoArray & { image?: string }> {
+  ): Promise<IGetIdolInfoArray & { image?: string; favorite?: boolean }> {
     const res: IGetIdolInfoArray = await this.idolsService.getIdolsByName(name);
     const resInImage = await Promise.all(
       res.map(async (idol) => {
         const image = await this.idolsService.getIdolsPicture(idol.firstName);
+        const isFavorite = await this.idolsService.isAlreadyFavorite(
+          req.user.id,
+          idol.id,
+        );
         return {
           ...idol,
+          favorite: isFavorite,
           image: image,
         };
       }),
