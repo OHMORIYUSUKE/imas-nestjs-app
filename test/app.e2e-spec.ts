@@ -424,6 +424,7 @@ describe('AppController (e2e)', () => {
             expect(response.statusCode).toEqual(200);
             const idols = JSON.parse(response.payload);
             expect(idols.length).toEqual(1);
+            expect(idols[0]['fullName']).toEqual('天海 春香');
           });
       });
   });

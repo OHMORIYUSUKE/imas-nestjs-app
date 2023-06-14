@@ -49,9 +49,21 @@ export class IdolsController {
   @Get('favorite')
   async getFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
-  ): Promise<FavoriteIdols[]> {
+  ): Promise<IGetIdolInfoArray & { image?: string }> {
     const res = await this.idolsService.getFavoriteIdolsByUserId(req.user.id);
-    return res;
+    const result = await Promise.all(
+      res.map(async (idol) => {
+        const favoriteIdol = await this.idolsService.getIdolsById(idol.idolId);
+        const image = await this.idolsService.getIdolsPicture(
+          favoriteIdol.firstName,
+        );
+        return {
+          ...favoriteIdol,
+          image: image,
+        };
+      }),
+    );
+    return result;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,7 +84,7 @@ export class IdolsController {
   async getIdols(
     @Query('name') name: string,
   ): Promise<IGetIdolInfoArray & { image?: string }> {
-    const res: IGetIdolInfoArray = await this.idolsService.getIdols(name);
+    const res: IGetIdolInfoArray = await this.idolsService.getIdolsByName(name);
     const resInImage = await Promise.all(
       res.map(async (idol) => {
         const image = await this.idolsService.getIdolsPicture(idol.firstName);

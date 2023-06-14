@@ -1,6 +1,9 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { PrincessApiSdk } from 'princess-api-sdk';
-import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
+import {
+  IGetIdolInfo,
+  IGetIdolInfoArray,
+} from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { Like, Repository } from 'typeorm';
 import { FavoriteIdols, Idols } from './idols.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,7 +22,7 @@ export class IdolsService {
    * @param name アイドルの名前(部分一致)
    * @returns Promise<IGetIdolInfoArray>
    */
-  async getIdols(name: string): Promise<IGetIdolInfoArray> {
+  async getIdolsByName(name: string): Promise<IGetIdolInfoArray> {
     const princessApiSdk = new PrincessApiSdk();
     const response = await princessApiSdk.getIdolInfo();
     if (!name) return response;
@@ -30,6 +33,24 @@ export class IdolsService {
       return false;
     });
     return result;
+  }
+
+  /**
+   * id でアイドルの情報を取得する
+   *
+   * @param id
+   * @returns Promise<IGetIdolInfo>
+   */
+  async getIdolsById(id: number): Promise<IGetIdolInfo> {
+    const princessApiSdk = new PrincessApiSdk();
+    const response = await princessApiSdk.getIdolInfo();
+    if (!id) return;
+    for (const idol of response) {
+      if (idol.id === id) {
+        return idol;
+      }
+    }
+    return;
   }
 
   /**
