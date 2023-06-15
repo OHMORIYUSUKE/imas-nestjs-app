@@ -15,7 +15,6 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-
   // クエリパラメータを自動で型変換する
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   // errors
@@ -38,4 +37,5 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   await app.listen(3001);
 }
+// 起動
 bootstrap();

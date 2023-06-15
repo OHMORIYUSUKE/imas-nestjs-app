@@ -5,8 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersWithoutPassword } from '../users/users.entity';
 
 /**
- * ToDo
- * Passportを継承して各種設定を行なっているのかな？
+ * Passportを継承して各種設定を行なっている
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

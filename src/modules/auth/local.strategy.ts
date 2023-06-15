@@ -13,6 +13,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email' });
   }
 
+  /**
+   * ユーザーが正しいかのバリデーション
+   *
+   * @param email メールアドレス
+   * @param password 平文のパスワード
+   * @returns
+   */
   async validate(
     email: string,
     password: string,

@@ -8,6 +8,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 
+/**
+ * 認証に関わるモジュール
+ */
 @Module({
   imports: [
     UsersModule,

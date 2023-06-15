@@ -12,6 +12,14 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  /**
+   * ユーザーがDBに存在するかどうか
+   * ハッシュ化済みのパスワードと平文のパスワードが一致するか検証
+   *
+   * @param email メールアドレス
+   * @param pass パスワード(ハッシュ化されていない)
+   * @returns
+   */
   async validateUser(
     email: string,
     pass: string,
