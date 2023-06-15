@@ -10,7 +10,10 @@ import {
   Param,
 } from '@nestjs/common';
 import { IdolsService } from './idols.service';
-import { IGetIdolInfoArray } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
+import {
+  IGetIdolInfo,
+  IGetIdolInfoArray,
+} from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersWithoutPassword } from '../users/users.entity';
 import { FavoriteIdols } from './idols.entity';
@@ -38,7 +41,7 @@ export class IdolsController {
   async postFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
     @Body() favoriteIdolDto: FavoriteIdolDto,
-  ): Promise<IGetIdolInfoArray & { image?: string }> {
+  ): Promise<void> {
     await this.idolsService.addFavoriteIdol(
       req.user.id,
       favoriteIdolDto.idolId,
@@ -50,7 +53,7 @@ export class IdolsController {
   @Get('favorite')
   async getFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
-  ): Promise<IGetIdolInfoArray & { image?: string; favorite?: boolean }> {
+  ): Promise<(IGetIdolInfo & { image?: string; favorite: boolean })[]> {
     const res = await this.idolsService.getFavoriteIdolsByUserId(req.user.id);
     const result = await Promise.all(
       res.map(async (favoriteIdol) => {
@@ -59,7 +62,7 @@ export class IdolsController {
         return {
           ...idol,
           favorite: true,
-          image: image,
+          image: image ? image : undefined,
         };
       }),
     );
@@ -71,7 +74,7 @@ export class IdolsController {
   async removeFavoriteIdol(
     @Request() req: { user: UsersWithoutPassword },
     @Param('id') id: number,
-  ): Promise<FavoriteIdols[]> {
+  ): Promise<void> {
     await this.idolsService.removeFavoriteIdol(req.user.id, id);
     return;
   }
@@ -81,7 +84,7 @@ export class IdolsController {
   async getIdols(
     @Request() req: { user: UsersWithoutPassword },
     @Query('name') name: string,
-  ): Promise<IGetIdolInfoArray & { image?: string; favorite?: boolean }> {
+  ): Promise<(IGetIdolInfo & { image?: string; favorite: boolean })[]> {
     const res: IGetIdolInfoArray = await this.idolsService.getIdolsByName(name);
     const resInImage = await Promise.all(
       res.map(async (idol) => {
@@ -93,7 +96,7 @@ export class IdolsController {
         return {
           ...idol,
           favorite: isFavorite,
-          image: image,
+          image: image ? image : undefined,
         };
       }),
     );
