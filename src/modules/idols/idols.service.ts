@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrincessApiSdk } from 'princess-api-sdk';
 import {
   IGetIdolInfo,

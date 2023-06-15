@@ -16,7 +16,6 @@ import {
 } from 'princess-api-sdk/lib/schemas/Idols/IGetIdolInfo';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersWithoutPassword } from '../users/users.entity';
-import { FavoriteIdols } from './idols.entity';
 
 type FavoriteIdolDto = {
   idolId: number;

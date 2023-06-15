@@ -2,8 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from '@nestjs/platform-fastify'; // 追加する行
-
+} from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from '@fastify/helmet';
