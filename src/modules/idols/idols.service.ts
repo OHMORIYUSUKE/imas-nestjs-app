@@ -88,6 +88,13 @@ export class IdolsService {
     return idols;
   }
 
+  /**
+   * ユーザーが該当のアイドルをすでにいいねしているかどうか
+   *
+   * @param userId number
+   * @param idolId number
+   * @returns Promise<boolean>
+   */
   async isAlreadyFavorite(userId: number, idolId: number): Promise<boolean> {
     const idol = await this.favoriteIdolsRepository.findOne({
       where: {
@@ -101,6 +108,7 @@ export class IdolsService {
       return false;
     }
   }
+
   /**
    * アイドルにいいねする
    *

@@ -49,6 +49,12 @@ export class IdolsController {
     return;
   }
 
+  /**
+   * いいねしたアイドル情報を取得
+   *
+   * @param req 認証情報
+   * @returns
+   */
   @UseGuards(JwtAuthGuard)
   @Get('favorite')
   async getFavoriteIdol(
@@ -69,6 +75,13 @@ export class IdolsController {
     return result;
   }
 
+  /**
+   * 特定のアイドルのいいねを取り消す
+   *
+   * @param req 認証情報
+   * @param id いいねを取り消すアイドルのid
+   * @returns
+   */
   @UseGuards(JwtAuthGuard)
   @Delete('favorite/:id')
   async removeFavoriteIdol(
@@ -79,6 +92,16 @@ export class IdolsController {
     return;
   }
 
+  /**
+   * アイドルの情報を取得し、アイドルを検索する
+   * 名前はカタカナ、漢字(部分一致)で検索可能
+   *
+   * ユーザーがいいねしたアイドルかの情報も取得できる
+   *
+   * @param req 認証情報
+   * @param name アイドルの名前(部分一致)
+   * @returns
+   */
   @UseGuards(JwtAuthGuard)
   @Get('search')
   async getIdols(

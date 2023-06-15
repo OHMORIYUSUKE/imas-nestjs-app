@@ -7,6 +7,9 @@ import { Users } from './users.entity';
 import { AuthService } from '../auth/auth.service';
 import { AuthModule } from '../auth/auth.module';
 
+/**
+ * ユーザーに関するモジュール
+ */
 @Module({
   providers: [UsersService, Repository],
   exports: [UsersService],
