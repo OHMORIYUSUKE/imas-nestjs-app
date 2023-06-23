@@ -40,3 +40,6 @@ lerna-debug.log*
 # db
 /db/data/mysql/*
 /db/data/redis/*
+
+# serverless
+.serverless
